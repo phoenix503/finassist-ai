@@ -1,0 +1,59 @@
+<div class="chat-container">
+  <header class="chat-header">
+    <div>
+      <h1>FinAssist AI</h1>
+      <p>Your intelligent banking assistant</p>
+    </div>
+    <span class="status">● Online</span>
+  </header>
+
+  <main class="chat-messages">
+    @if (messages.length === 0) {
+      <div class="welcome">
+        <h2>Welcome to FinAssist AI 👋</h2>
+        <p>How can I help you with your banking questions today?</p>
+      </div>
+    }
+
+    @for (message of messages; track $index) {
+      <div class="message-row" [class.user-row]="message.role === 'user'">
+        <div class="message" [class.user-message]="message.role === 'user'">
+          <strong>
+            {{ message.role === 'user' ? 'You' : 'FinAssist AI' }}
+          </strong>
+          <p>{{ message.content }}</p>
+        </div>
+      </div>
+    }
+
+  @if (isLoading && !messages[messages.length - 1]?.content) {
+  <div class="message-row">
+    <div class="message">
+      <strong>FinAssist AI</strong>
+      <p>Thinking...</p>
+    </div>
+  </div>
+}
+
+    @if (errorMessage) {
+      <p class="error">{{ errorMessage }}</p>
+    }
+  </main>
+
+  <footer class="chat-input">
+    <input
+      type="text"
+      [(ngModel)]="userInput"
+      placeholder="Ask your banking question..."
+      (keyup.enter)="sendMessage()"
+      [disabled]="isLoading"
+    />
+
+    <button
+      (click)="sendMessage()"
+      [disabled]="isLoading || !userInput.trim()"
+    >
+      Send
+    </button>
+  </footer>
+</div>
